@@ -8,35 +8,36 @@ app = Flask(__name__)
 model = pickle.load(open("flight_rf.pkl", "rb"))
 
 
-
 @app.route("/")
 @cross_origin()
 def home():
     return render_template("index.html")
 
 
-
-
-@app.route("/predict", methods = ["GET", "POST"])
+@app.route("/predict", methods=["GET"])
 @cross_origin()
 def predict():
-    if request.method == "POST":
+    if request.method == "GET":
 
         # Date_of_Journey
         date_dep = request.form["Dep_Time"]
-        Journey_day = int(pd.to_datetime(date_dep, format="%Y-%m-%dT%H:%M").day)
-        Journey_month = int(pd.to_datetime(date_dep, format ="%Y-%m-%dT%H:%M").month)
+        Journey_day = int(pd.to_datetime(
+            date_dep, format="%Y-%m-%dT%H:%M").day)
+        Journey_month = int(pd.to_datetime(
+            date_dep, format="%Y-%m-%dT%H:%M").month)
         # print("Journey Date : ",Journey_day, Journey_month)
 
         # Departure
-        Dep_hour = int(pd.to_datetime(date_dep, format ="%Y-%m-%dT%H:%M").hour)
-        Dep_min = int(pd.to_datetime(date_dep, format ="%Y-%m-%dT%H:%M").minute)
+        Dep_hour = int(pd.to_datetime(date_dep, format="%Y-%m-%dT%H:%M").hour)
+        Dep_min = int(pd.to_datetime(date_dep, format="%Y-%m-%dT%H:%M").minute)
         # print("Departure : ",Dep_hour, Dep_min)
 
         # Arrival
         date_arr = request.form["Arrival_Time"]
-        Arrival_hour = int(pd.to_datetime(date_arr, format ="%Y-%m-%dT%H:%M").hour)
-        Arrival_min = int(pd.to_datetime(date_arr, format ="%Y-%m-%dT%H:%M").minute)
+        Arrival_hour = int(pd.to_datetime(
+            date_arr, format="%Y-%m-%dT%H:%M").hour)
+        Arrival_min = int(pd.to_datetime(
+            date_arr, format="%Y-%m-%dT%H:%M").minute)
         # print("Arrival : ", Arrival_hour, Arrival_min)
 
         # Duration
@@ -50,8 +51,8 @@ def predict():
 
         # Airline
         # AIR ASIA = 0 (not in column)
-        airline=request.form['airline']
-        if(airline=='Jet Airways'):
+        airline = request.form['airline']
+        if (airline == 'Jet Airways'):
             Jet_Airways = 1
             IndiGo = 0
             Air_India = 0
@@ -62,9 +63,9 @@ def predict():
             Multiple_carriers_Premium_economy = 0
             Jet_Airways_Business = 0
             Vistara_Premium_economy = 0
-            Trujet = 0 
+            Trujet = 0
 
-        elif (airline=='IndiGo'):
+        elif (airline == 'IndiGo'):
             Jet_Airways = 0
             IndiGo = 1
             Air_India = 0
@@ -75,9 +76,9 @@ def predict():
             Multiple_carriers_Premium_economy = 0
             Jet_Airways_Business = 0
             Vistara_Premium_economy = 0
-            Trujet = 0 
+            Trujet = 0
 
-        elif (airline=='Air India'):
+        elif (airline == 'Air India'):
             Jet_Airways = 0
             IndiGo = 0
             Air_India = 1
@@ -88,9 +89,9 @@ def predict():
             Multiple_carriers_Premium_economy = 0
             Jet_Airways_Business = 0
             Vistara_Premium_economy = 0
-            Trujet = 0 
-            
-        elif (airline=='Multiple carriers'):
+            Trujet = 0
+
+        elif (airline == 'Multiple carriers'):
             Jet_Airways = 0
             IndiGo = 0
             Air_India = 0
@@ -101,9 +102,9 @@ def predict():
             Multiple_carriers_Premium_economy = 0
             Jet_Airways_Business = 0
             Vistara_Premium_economy = 0
-            Trujet = 0 
-            
-        elif (airline=='SpiceJet'):
+            Trujet = 0
+
+        elif (airline == 'SpiceJet'):
             Jet_Airways = 0
             IndiGo = 0
             Air_India = 0
@@ -114,9 +115,9 @@ def predict():
             Multiple_carriers_Premium_economy = 0
             Jet_Airways_Business = 0
             Vistara_Premium_economy = 0
-            Trujet = 0 
-            
-        elif (airline=='Vistara'):
+            Trujet = 0
+
+        elif (airline == 'Vistara'):
             Jet_Airways = 0
             IndiGo = 0
             Air_India = 0
@@ -129,7 +130,7 @@ def predict():
             Vistara_Premium_economy = 0
             Trujet = 0
 
-        elif (airline=='GoAir'):
+        elif (airline == 'GoAir'):
             Jet_Airways = 0
             IndiGo = 0
             Air_India = 0
@@ -142,7 +143,7 @@ def predict():
             Vistara_Premium_economy = 0
             Trujet = 0
 
-        elif (airline=='Multiple carriers Premium economy'):
+        elif (airline == 'Multiple carriers Premium economy'):
             Jet_Airways = 0
             IndiGo = 0
             Air_India = 0
@@ -155,7 +156,7 @@ def predict():
             Vistara_Premium_economy = 0
             Trujet = 0
 
-        elif (airline=='Jet Airways Business'):
+        elif (airline == 'Jet Airways Business'):
             Jet_Airways = 0
             IndiGo = 0
             Air_India = 0
@@ -168,7 +169,7 @@ def predict():
             Vistara_Premium_economy = 0
             Trujet = 0
 
-        elif (airline=='Vistara Premium economy'):
+        elif (airline == 'Vistara Premium economy'):
             Jet_Airways = 0
             IndiGo = 0
             Air_India = 0
@@ -180,8 +181,8 @@ def predict():
             Jet_Airways_Business = 0
             Vistara_Premium_economy = 1
             Trujet = 0
-            
-        elif (airline=='Trujet'):
+
+        elif (airline == 'Trujet'):
             Jet_Airways = 0
             IndiGo = 0
             Air_India = 0
@@ -266,7 +267,7 @@ def predict():
             d_New_Delhi = 0
             d_Hyderabad = 0
             d_Kolkata = 0
-        
+
         elif (Source == 'Delhi'):
             d_Cochin = 0
             d_Delhi = 1
@@ -309,7 +310,6 @@ def predict():
         #     d_Hyderabad,
         #     d_Kolkata
         # )
-        
 
     #     ['Total_Stops', 'Journey_day', 'Journey_month', 'Dep_hour',
     #    'Dep_min', 'Arrival_hour', 'Arrival_min', 'Duration_hours',
@@ -321,8 +321,8 @@ def predict():
     #    'Source_Chennai', 'Source_Delhi', 'Source_Kolkata', 'Source_Mumbai',
     #    'Destination_Cochin', 'Destination_Delhi', 'Destination_Hyderabad',
     #    'Destination_Kolkata', 'Destination_New Delhi']
-        
-        prediction=model.predict([[
+
+        prediction = model.predict([[
             Total_stops,
             Journey_day,
             Journey_month,
@@ -354,14 +354,11 @@ def predict():
             d_New_Delhi
         ]])
 
-        output=round(prediction[0],2)
+        output = round(prediction[0], 2)
 
-        return render_template('index.html',prediction_text="Your Flight price is Rs. {}".format(output))
-
+        return render_template('index.html', prediction_text="Your Flight price is Rs. {}".format(output))
 
     return render_template("index.html")
-
-
 
 
 if __name__ == "__main__":
