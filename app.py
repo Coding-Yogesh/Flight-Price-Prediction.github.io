@@ -14,7 +14,7 @@ def home():
     return render_template("index.html")
 
 
-@app.route("/predict", methods=["GET"])
+@app.route("/predict", methods=["GET", "POST"])
 @cross_origin()
 def predict():
     if request.method == "GET":
